@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     steps:
       - name: Get app source
         uses: actions/checkout@v4
@@ -30,3 +30,11 @@ jobs:
           name: daphne-morning-companion-apk
           path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
+      - name: Publish easy-download release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: Daphne Morning Companion
+          body: Install Daphne on Jasmin's Android phone. Download app-release.apk below.
+          make_latest: true
+          files: build/app/outputs/flutter-apk/app-release.apk
