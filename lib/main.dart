@@ -219,7 +219,18 @@ class _MorningScreenState extends State<MorningScreen> {
                 child: AnimatedScale(
                   duration: const Duration(milliseconds: 180),
                   scale: _speaking ? 1.025 : 1,
-                  child: Image.asset('assets/daphne.png', height: 315, fit: BoxFit.contain),
+                  child: Container(
+                    height: 315,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Color(0xFFE8D5F5), Color(0xFF8B5BA7)],
+                      ),
+                    ),
+                    child: const Icon(Icons.face_3_rounded, size: 210, color: Color(0xFFFFF8ED)),
+                  ),
                 ),
               ),
             ),
