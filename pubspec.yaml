@@ -1,0 +1,19 @@
+name: daphne_morning_companion
+description: A gentle offline morning task companion for Jasmin.
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_tts: ^4.2.2
+  shared_preferences: ^2.5.3
+  uuid: ^4.5.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/daphne.png
