@@ -22,31 +22,26 @@ jobs:
         run: flutter create --platforms=android --org com.kimberlydaria .
       - name: Install Flutter packages
         run: flutter pub get
-      - name: Build standard release APK
-        run: flutter build apk --release
-      - name: Build compatibility APK
+      - name: Build OPPO A3 arm64 APK
         run: |
-          flutter build apk --debug
-          cp build/app/outputs/flutter-apk/app-debug.apk daphne-compatible.apk
-      - name: Verify APK files
+          flutter build apk --release --target-platform android-arm64
+          cp build/app/outputs/flutter-apk/app-release.apk daphne-oppo-a3.apk
+      - name: Verify APK archive and signature
         run: |
-          unzip -t build/app/outputs/flutter-apk/app-release.apk
-          unzip -t daphne-compatible.apk
-      - name: Upload installable APKs
+          unzip -t daphne-oppo-a3.apk
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -1)"
+          "$APKSIGNER" verify --verbose --print-certs daphne-oppo-a3.apk
+      - name: Upload verified OPPO APK
         uses: actions/upload-artifact@v4
         with:
-          name: daphne-morning-companion-apks
-          path: |
-            build/app/outputs/flutter-apk/app-release.apk
-            daphne-compatible.apk
+          name: daphne-oppo-a3-apk
+          path: daphne-oppo-a3.apk
           retention-days: 30
       - name: Publish easy-download release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.0.0
           name: Daphne Morning Companion
-          body: Download daphne-compatible.apk if Android reports a parsing problem with the standard APK.
+          body: For Jasmin's OPPO A3 CPH2669 on Android 14, download daphne-oppo-a3.apk.
           make_latest: true
-          files: |
-            build/app/outputs/flutter-apk/app-release.apk
-            daphne-compatible.apk
+          files: daphne-oppo-a3.apk
