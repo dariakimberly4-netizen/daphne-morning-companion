@@ -22,19 +22,31 @@ jobs:
         run: flutter create --platforms=android --org com.kimberlydaria .
       - name: Install Flutter packages
         run: flutter pub get
-      - name: Build release APK
+      - name: Build standard release APK
         run: flutter build apk --release
-      - name: Upload installable APK
+      - name: Build compatibility APK
+        run: |
+          flutter build apk --debug
+          cp build/app/outputs/flutter-apk/app-debug.apk daphne-compatible.apk
+      - name: Verify APK files
+        run: |
+          unzip -t build/app/outputs/flutter-apk/app-release.apk
+          unzip -t daphne-compatible.apk
+      - name: Upload installable APKs
         uses: actions/upload-artifact@v4
         with:
-          name: daphne-morning-companion-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: daphne-morning-companion-apks
+          path: |
+            build/app/outputs/flutter-apk/app-release.apk
+            daphne-compatible.apk
           retention-days: 30
       - name: Publish easy-download release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.0.0
           name: Daphne Morning Companion
-          body: Install Daphne on Jasmin's Android phone. Download app-release.apk below.
+          body: Download daphne-compatible.apk if Android reports a parsing problem with the standard APK.
           make_latest: true
-          files: build/app/outputs/flutter-apk/app-release.apk
+          files: |
+            build/app/outputs/flutter-apk/app-release.apk
+            daphne-compatible.apk
